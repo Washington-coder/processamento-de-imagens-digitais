@@ -21,12 +21,16 @@ def find_max(image):
     return max_val
 
 def expand_contrast(image, new_min, new_max):
-    old_min = find_min(image)
-    old_max = find_max(image)
+    old_min = int(find_min(image))
+    old_max = int(find_max(image))
     result = image.copy()
     for i in range(len(image)):
         for j in range(len(image[0])):
-            result[i][j] = int((image[i][j] - old_min) * (new_max - new_min) / (old_max - old_min) + new_min)
+            pixel = int(image[i][j])
+            new_pixel = int((pixel - old_min) * (new_max - new_min) / (old_max - old_min) + new_min)
+            if new_pixel >= 255:
+                new_pixel = 255
+            result[i][j] = new_pixel
     return result
 
 def compress_expand(image, factor):
@@ -68,8 +72,8 @@ if image is None:
     print("Erro ao carregar a imagem. Verifique o caminho.")
     exit()
 
-contrasted_image = expand_contrast(image, 0, 255)
 compressed_image = compress_expand(image, 0.5)
+contrasted_image = expand_contrast(compressed_image, 0, 255)
 sawtooth_image = sawtooth_transform(image, 50)
 log_image = log_transform(image)
 
