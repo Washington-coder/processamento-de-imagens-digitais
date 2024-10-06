@@ -150,5 +150,5 @@ mode_filtered_image = mode_filter(noisy_image, 3)
 
 # Mostrar as imagens
 images = [noisy_image, mean_filtered_image, median_filtered_image, mode_filtered_image]
-titles = ['Imagem original com uuído sal e pimenta', 'filtro da media', 'Filtro da mediana', 'Filtro da moda']
+titles = ['Imagem original com uuído sal e pimenta', 'Filtro da media', 'Filtro da mediana', 'Filtro da moda']
 show_multiple_images(images, titles)

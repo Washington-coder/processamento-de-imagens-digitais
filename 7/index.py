@@ -16,10 +16,6 @@ def quantize_image(image, k):
     
     return quantized_image
 
-# Função para aplicar filtro Gaussiano
-def apply_gaussian_blur(image, kernel_size=3):
-    return cv2.GaussianBlur(image, (kernel_size, kernel_size), 1.0)
-
 # Função para calcular gradiente com Sobel
 def calculate_gradient(image):
     sobel_x = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
@@ -87,16 +83,13 @@ def hysteresis_thresholding(image, low_threshold, high_threshold):
     return result
 
 def canny_edge_detection(image, low_threshold=30, high_threshold=100):
-    # Passo 1: Aplicar filtro Gaussiano
-    blurred_image = apply_gaussian_blur(image)
+    # Calcular gradiente e direção
+    gradient_magnitude, gradient_direction = calculate_gradient(image)
 
-    # Passo 2: Calcular gradiente e direção
-    gradient_magnitude, gradient_direction = calculate_gradient(blurred_image)
-
-    # Passo 3: Supressão de Não-Máximos
+    # Supressão de Não-Máximos
     non_max_image = non_max_suppression(gradient_magnitude, gradient_direction)
 
-    # Passo 4: Aplicar Histerese
+    # Aplicar Histerese
     edges = hysteresis_thresholding(non_max_image, low_threshold, high_threshold)
 
     return edges
@@ -116,7 +109,6 @@ def edge_detection_with_quantization(image_path, num_colors=64, low_threshold=30
     edges = canny_edge_detection(gray_image, low_threshold, high_threshold)
     
     cv2.imshow('Original Image', image)
-    cv2.imshow('Quantized Image', quantized_image)
     cv2.imshow('Edges Detected', edges)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
