@@ -114,10 +114,28 @@ def sawtooth_transform(image, period):
 
 def log_transform(image):
     result = image.copy()
-    c = 255 / math.log(1 + find_max(image))
-    for i in range(len(image)):
-        for j in range(len(image[0])):
-            result[i][j] = int(c * math.log(1 + image[i][j]))
+    altura, largura = image.shape[:2]
+    
+    max_val = int(find_max(image))
+    
+    c = 255 / math.log(1 + max_val)
+    
+    for i in range(altura):
+        for j in range(largura):
+            
+            pixel = image[i][j]
+            
+            B = int(pixel[0])
+            G = int(pixel[1])
+            R = int(pixel[2])
+            
+            # Aplicando a transformação logarítmica para cada canal
+            B = int(c * math.log(1 + B))
+            G = int(c * math.log(1 + G))
+            R = int(c * math.log(1 + R))
+            
+            result[i][j] = [B, G, R]
+    
     return result
 
 def show_multiple_images(images, titles):
@@ -135,8 +153,8 @@ if image is None:
 compressed_image = compress_expand(image, 0.5)
 contrasted_image = expand_contrast(compressed_image, 0, 255)
 sawtooth_image = sawtooth_transform(image, 50)
-# log_image = log_transform(image)
+log_image = log_transform(image)
 
-images = [image, compressed_image, contrasted_image, sawtooth_image]
-titles = ['Imagem original', 'Compressão de contraste linear', 'Expansão de contraste linear', 'Dente de serra']
+images = [image, compressed_image, contrasted_image, sawtooth_image, log_image]
+titles = ['Imagem original', 'Compressão de contraste linear', 'Expansão de contraste linear', 'Dente de serra', 'Transformada logaritmo']
 show_multiple_images(images, titles)
