@@ -1,22 +1,30 @@
 import cv2
 import numpy as np
+import random
+import copy
 
 def open_image(path):
-    return cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    return cv2.imread(path)
+
 
 def add_salt_and_pepper_noise(image, salt_prob, pepper_prob):
-    noisy_image = np.copy(image)
-    total_pixels = image.size
+    noisy_image = copy.deepcopy(image)
+    height, width = len(image), len(image[0])
+    total_pixels = height * width
 
     # Adiciona sal
     num_salt = round(salt_prob * total_pixels)
-    coords = [np.random.randint(0, i - 1, num_salt) for i in image.shape]
-    noisy_image[coords[0], coords[1]] = 255  # Pixels brancos (sal)
+    for _ in range(num_salt):
+        i = random.randint(0, height - 1)
+        j = random.randint(0, width - 1)
+        noisy_image[i][j] = [255, 255, 255]  # Branco (sal)
 
     # Adiciona pimenta
     num_pepper = round(pepper_prob * total_pixels)
-    coords = [np.random.randint(0, i - 1, num_pepper) for i in image.shape]
-    noisy_image[coords[0], coords[1]] = 0  # Pixels pretos (pimenta)
+    for _ in range(num_pepper):
+        i = random.randint(0, height - 1)
+        j = random.randint(0, width - 1)
+        noisy_image[i][j] = [0, 0, 0]  # Preto (pimenta)
     
     return noisy_image
 
@@ -91,14 +99,14 @@ def show_multiple_images(images, titles):
 
 # Carregar a imagem e adicionar ruído
 image = open_image('../images/lena.png')  # Substitua pelo caminho da sua imagem
-noisy_image = add_salt_and_pepper_noise(image, 0.01, 0.01)
+noisy_image = add_salt_and_pepper_noise(image, 0.1, 0.1)
 
 # Aplicar os filtros
-mean_filtered_image = mean_filter(noisy_image, 3)
-median_filtered_image = median_filter(noisy_image, 3)
-mode_filtered_image = mode_filter(noisy_image, 3)
+# mean_filtered_image = mean_filter(noisy_image, 3)
+# median_filtered_image = median_filter(noisy_image, 3)
+# mode_filtered_image = mode_filter(noisy_image, 3)
 
 # Mostrar as imagens
-images = [noisy_image, mean_filtered_image, median_filtered_image, mode_filtered_image]
-titles = ['Imagem Original com Ruído', 'Filtro da Média', 'Filtro da Mediana', 'Filtro da Moda']
+images = [noisy_image]
+titles = ['Imagem original com uuído sal e pimenta']
 show_multiple_images(images, titles)
