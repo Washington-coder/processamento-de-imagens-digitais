@@ -23,25 +23,55 @@ def detect_edges(image, low_threshold=30, high_threshold=100):
     edges = cv2.Canny(blurred_image, low_threshold, high_threshold)
     return edges
 
-# Função para gerar as imagens de borda e interior
 def generate_border_interior_images(image, edges):
     # Expande a máscara de borda para 3 canais
     edges_3ch = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
 
-    # Borda mantém a cor original, interior fica branco
-    border_image = np.where(edges_3ch == [255, 255, 255], image, [255, 255, 255]).astype(np.uint8)
-    
-    # Interior mantém a cor original, borda fica branca
-    interior_image = np.where(edges_3ch == [0, 0, 0], image, [255, 255, 255]).astype(np.uint8)
-    
+    # Inicializa as imagens de borda e interior com branco
+    border_image = np.ones_like(image) * 255  # Imagem completamente branca
+    interior_image = np.ones_like(image) * 255  # Imagem completamente branca
+
+    # Adiciona a cor original para a imagem da borda
+    border_image[edges_3ch[:, :, 0] == 255] = image[edges_3ch[:, :, 0] == 255]
+
+    # Adiciona a cor original para a imagem do interior
+    interior_image[edges_3ch[:, :, 0] == 0] = image[edges_3ch[:, :, 0] == 0]
+
+    # Define os pixels da borda para branco na imagem interior
+    interior_image[edges_3ch[:, :, 0] == 255] = [255, 255, 255]
+
     return border_image, interior_image
-
-
 
 # Função para calcular histogramas (para borda e interior)
 def calculate_histogram(image, mask, num_colors):
-    hist = cv2.calcHist([image], [0, 1, 2], mask, [num_colors, num_colors, num_colors], [0, 256, 0, 256, 0, 256])
-    return hist.flatten()
+    hist = [[[0 for _ in range(num_colors)] for _ in range(num_colors)] for _ in range(num_colors)]
+    
+    height, width = len(image), len(image[0])
+    
+    for i in range(height):
+        for j in range(width):
+            if mask[i][j] == 255:  # Considera apenas os pixels onde a máscara é 255 (branco)
+                # Obtém os valores RGB do pixel
+                r = image[i][j][0]
+                g = image[i][j][1]
+                b = image[i][j][2]
+
+                # Normaliza os valores para o número de cores
+                r_idx = r * num_colors // 256  # Mapeia para o índice do histograma
+                g_idx = g * num_colors // 256
+                b_idx = b * num_colors // 256
+
+                # Atualiza o histograma
+                hist[r_idx][g_idx][b_idx] += 1
+
+    # Converte o histograma 3D em um vetor 1D
+    flattened_hist = []
+    for r in range(num_colors):
+        for g in range(num_colors):
+            for b in range(num_colors):
+                flattened_hist.append(hist[r][g][b])
+
+    return flattened_hist
 
 # Função principal para extração de propriedades de cor usando BIC
 def extract_bic_properties(image_path, num_colors=64, low_threshold=30, high_threshold=100):
