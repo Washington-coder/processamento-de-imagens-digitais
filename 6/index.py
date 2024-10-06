@@ -98,30 +98,43 @@ def median_filter(image, kernel_size):
 
 def mode_filter(image, kernel_size):
     pad = kernel_size // 2
-    height, width = image.shape
-    result = np.zeros((height, width), dtype=np.uint8)
+    height, width = len(image), len(image[0])
+    
+    # Inicializando a imagem de resultado
+    result = [[[0, 0, 0] for _ in range(width)] for _ in range(height)]
 
-    # Aplicar o filtro da moda
+    # Aplicar o filtro da moda para cada pixel
     for i in range(height):
         for j in range(width):
-            values = []
+            red_values = []
+            green_values = []
+            blue_values = []
+
             for m in range(-pad, pad + 1):
                 for n in range(-pad, pad + 1):
+                    # Coordenadas de vizinhança
                     x = min(max(i + m, 0), height - 1)
                     y = min(max(j + n, 0), width - 1)
-                    values.append(image[x, y])
-            # Encontrar o valor da moda (mais frequente)
-            mode_value = max(set(values), key=values.count)
-            result[i, j] = mode_value
-            
+
+                    # Adiciona os valores dos canais
+                    pixel = image[x][y]
+                    blue_values.append(pixel[0])   # Canal B
+                    green_values.append(pixel[1])  # Canal G
+                    red_values.append(pixel[2])    # Canal R
+
+            # Encontrar a moda para cada canal
+            result[i][j][0] = max(set(blue_values), key=blue_values.count)   # Canal B
+            result[i][j][1] = max(set(green_values), key=green_values.count) # Canal G
+            result[i][j][2] = max(set(red_values), key=red_values.count)     # Canal R
+
     return result
+
 
 def show_multiple_images(images, titles):
     for idx, (title, image) in enumerate(zip(titles, images)):
         # Converte a imagem para um array NumPy, se necessário
-        if isinstance(image, list):  # Se for uma lista, converta para NumPy
+        if isinstance(image, list):
             image = np.array(image, dtype=np.uint8)
-        
         cv2.imshow(title, image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
@@ -133,9 +146,9 @@ noisy_image = add_salt_and_pepper_noise(image, 0.1, 0.1)
 # Aplicar os filtros
 mean_filtered_image = mean_filter(noisy_image, 3)
 median_filtered_image = median_filter(noisy_image, 3)
-# mode_filtered_image = mode_filter(noisy_image, 3)
+mode_filtered_image = mode_filter(noisy_image, 3)
 
 # Mostrar as imagens
-images = [noisy_image, mean_filtered_image, median_filtered_image]
-titles = ['Imagem original com uuído sal e pimenta', 'mean_filtered_image', 'median_filtered_image']
+images = [noisy_image, mean_filtered_image, median_filtered_image, mode_filtered_image]
+titles = ['Imagem original com uuído sal e pimenta', 'filtro da media', 'Filtro da mediana', 'Filtro da moda']
 show_multiple_images(images, titles)
