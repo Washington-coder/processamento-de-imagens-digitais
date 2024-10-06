@@ -1,6 +1,6 @@
 import cv2
 
-def clarear_imagem(caminho_imagem):
+def negativar_imagem(caminho_imagem):
     img = cv2.imread(caminho_imagem)
     
     img_original = img.copy()
@@ -34,4 +34,4 @@ def clarear_imagem(caminho_imagem):
 
 caminho_imagem = '../images/lena.png'
 
-clarear_imagem(caminho_imagem)
+negativar_imagem(caminho_imagem)
