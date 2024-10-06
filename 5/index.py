@@ -2,7 +2,17 @@ import cv2
 import math
 
 def open_image(path):
-    return cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    return cv2.imread(path)
+
+def get_values_for_overflow(B, G, R):
+    if B > 255:
+        B = 255
+    if G > 255:
+        G = 255
+    if R > 255:
+        R = 255
+        
+    return B, G, R
 
 def find_min(image):
     min_val = 255
@@ -35,14 +45,20 @@ def expand_contrast(image, new_min, new_max):
 
 def compress_expand(image, factor):
     result = image.copy()
-    for i in range(len(image)):
-        for j in range(len(image[0])):
-            new_val = int(image[i][j] * factor)
-            if new_val > 255:
-                new_val = 255
-            elif new_val < 0:
-                new_val = 0
-            result[i][j] = new_val
+    
+    altura, largura = image.shape[:2]
+    
+    for i in range(altura):
+        for j in range(largura):
+            pixel = image[i][j]
+            
+            B = int(pixel[0]) * factor
+            G = int(pixel[1]) * factor
+            R = int(pixel[2]) * factor
+            
+            B, G, R = get_values_for_overflow(B, G, R)
+            
+            result[i][j] = B, G, R
     return result
 
 def sawtooth_transform(image, period):
@@ -73,10 +89,10 @@ if image is None:
     exit()
 
 compressed_image = compress_expand(image, 0.5)
-contrasted_image = expand_contrast(compressed_image, 0, 255)
-sawtooth_image = sawtooth_transform(image, 50)
-log_image = log_transform(image)
+# contrasted_image = expand_contrast(compressed_image, 0, 255)
+# sawtooth_image = sawtooth_transform(image, 50)
+# log_image = log_transform(image)
 
-images = [contrasted_image, compressed_image, sawtooth_image, log_image]
-titles = ['Expansão de Contraste', 'Compressão', 'Dente de Serra', 'Transformada Logarítmica']
+images = [compressed_image]
+titles = ['Compressão']
 show_multiple_images(images, titles)
