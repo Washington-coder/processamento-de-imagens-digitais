@@ -141,7 +141,7 @@ def show_multiple_images(images, titles):
 
 # Carregar a imagem e adicionar ruído
 image = open_image('../images/lena.png')  # Substitua pelo caminho da sua imagem
-noisy_image = add_salt_and_pepper_noise(image, 0.1, 0.1)
+noisy_image = add_salt_and_pepper_noise(image, 0.05, 0.05)
 
 # Aplicar os filtros
 mean_filtered_image = mean_filter(noisy_image, 3)
@@ -150,5 +150,5 @@ mode_filtered_image = mode_filter(noisy_image, 3)
 
 # Mostrar as imagens
 images = [noisy_image, mean_filtered_image, median_filtered_image, mode_filtered_image]
-titles = ['Imagem original com uuído sal e pimenta', 'Filtro da media', 'Filtro da mediana', 'Filtro da moda']
+titles = ['Imagem original com ruído sal e pimenta', 'Filtro da media', 'Filtro da mediana', 'Filtro da moda']
 show_multiple_images(images, titles)
