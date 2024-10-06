@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 
 # Função para quantizar a imagem (mesma da questão anterior)
 def quantize_image(image, k):
