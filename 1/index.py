@@ -21,10 +21,13 @@ def clarear_imagem(caminho_imagem):
             G = int(pixel[1])
             R = int(pixel[2])
             
+            
+            # Adiciona o valor de claridade a cada canal
             B += clarity
             G += clarity
             R += clarity
             
+            # Condições para evitar o overflow das cores
             if (R) > 255:
                 R = 255
             if (G) > 255:

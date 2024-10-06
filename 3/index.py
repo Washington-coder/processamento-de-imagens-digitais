@@ -7,6 +7,7 @@ def calcular_histograma_global(image_path, output_file):
         print(f"Erro ao carregar a imagem: {image_path}")
         return
     
+    # Inicializamos o vetor com zeros para que possamos incrementar nas posicoes
     hist_r = [0] * 256
     hist_g = [0] * 256
     hist_b = [0] * 256
@@ -18,12 +19,15 @@ def calcular_histograma_global(image_path, output_file):
             
             blue, green, red = image[i, j]
             
+            # Incrementamos nas posicoes de cada canal
             hist_b[blue] += 1
             hist_g[green] += 1
             hist_r[red] += 1
 
+    # Concatenamos os histogramas de cada canal
     histograma_global = hist_b + hist_g + hist_r
 
+    # Escrevemos os valores em um arquivo
     with open(output_file, 'w') as f:
         for value in histograma_global:
             f.write(f"{value} ")                            

@@ -49,14 +49,14 @@ def mean_filter(image, kernel_size):
 
                     # Somar os valores dos canais B, G, R
                     pixel = image[x][y]
-                    sum_B += int(pixel[0])  # Canal B
-                    sum_G += int(pixel[1])  # Canal G
-                    sum_R += int(pixel[2])  # Canal R
+                    sum_B += int(pixel[0])
+                    sum_G += int(pixel[1])
+                    sum_R += int(pixel[2])
                     count += 1
 
-            result[i][j][0] = min(255, max(0, sum_B // count))  # Canal B
-            result[i][j][1] = min(255, max(0, sum_G // count))  # Canal G
-            result[i][j][2] = min(255, max(0, sum_R // count))  # Canal R
+            result[i][j][0] = min(255, max(0, sum_B // count))
+            result[i][j][1] = min(255, max(0, sum_G // count))
+            result[i][j][2] = min(255, max(0, sum_R // count))
 
     return result
 
@@ -84,14 +84,14 @@ def median_filter(image, kernel_size):
 
                     # Adiciona os valores dos canais
                     pixel = image[x][y]
-                    blue_values.append(pixel[0])   # Canal B
-                    green_values.append(pixel[1])  # Canal G
-                    red_values.append(pixel[2])    # Canal R
+                    blue_values.append(pixel[0])
+                    green_values.append(pixel[1])
+                    red_values.append(pixel[2])
 
             # Calcula a mediana para cada canal
-            result[i][j][0] = sorted(blue_values)[len(blue_values) // 2]   # Canal B
-            result[i][j][1] = sorted(green_values)[len(green_values) // 2] # Canal G
-            result[i][j][2] = sorted(red_values)[len(red_values) // 2]     # Canal R
+            result[i][j][0] = sorted(blue_values)[len(blue_values) // 2] 
+            result[i][j][1] = sorted(green_values)[len(green_values) // 2]
+            result[i][j][2] = sorted(red_values)[len(red_values) // 2]
 
     return result
 
@@ -118,14 +118,14 @@ def mode_filter(image, kernel_size):
 
                     # Adiciona os valores dos canais
                     pixel = image[x][y]
-                    blue_values.append(pixel[0])   # Canal B
-                    green_values.append(pixel[1])  # Canal G
-                    red_values.append(pixel[2])    # Canal R
+                    blue_values.append(pixel[0])
+                    green_values.append(pixel[1])
+                    red_values.append(pixel[2])
 
             # Encontrar a moda para cada canal
-            result[i][j][0] = max(set(blue_values), key=blue_values.count)   # Canal B
-            result[i][j][1] = max(set(green_values), key=green_values.count) # Canal G
-            result[i][j][2] = max(set(red_values), key=red_values.count)     # Canal R
+            result[i][j][0] = max(set(blue_values), key=blue_values.count)
+            result[i][j][1] = max(set(green_values), key=green_values.count)
+            result[i][j][2] = max(set(red_values), key=red_values.count)
 
     return result
 
@@ -139,8 +139,7 @@ def show_multiple_images(images, titles):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-# Carregar a imagem e adicionar ruído
-image = open_image('../images/lena.png')  # Substitua pelo caminho da sua imagem
+image = open_image('../images/lena.png')
 noisy_image = add_salt_and_pepper_noise(image, 0.05, 0.05)
 
 # Aplicar os filtros

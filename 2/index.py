@@ -18,7 +18,8 @@ def negativar_imagem(caminho_imagem):
             B = int(pixel[0])
             G = int(pixel[1])
             R = int(pixel[2])
-            
+             
+            # Logica para negativar a imagem realizada para cada canal
             B = (255 - B) % 255
             G = (255 - G) % 255
             R = (255 - R) % 255

@@ -94,7 +94,7 @@ def canny_edge_detection(image, low_threshold=30, high_threshold=100):
 
     return edges
 
-# Função principal para detecção de bordas com quantização
+# Detecção de bordas com quantização
 def edge_detection_with_quantization(image_path, num_colors=64, low_threshold=30, high_threshold=100):
     
     image = cv2.imread(image_path)
@@ -108,8 +108,8 @@ def edge_detection_with_quantization(image_path, num_colors=64, low_threshold=30
     # Aplicar o algoritmo Canny
     edges = canny_edge_detection(gray_image, low_threshold, high_threshold)
     
-    cv2.imshow('Original Image', image)
-    cv2.imshow('Edges Detected', edges)
+    cv2.imshow('Imagem original', image)
+    cv2.imshow('Detecção de bordas', edges)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

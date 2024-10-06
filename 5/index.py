@@ -16,7 +16,6 @@ def get_values_for_overflow(B, G, R):
 
 def find_min(image):
     min_val = 255
-    # Itera sobre os pixels da imagem
     for row in image:
         for pixel in row:
             # Acessa cada canal (B, G, R) do pixel
@@ -27,7 +26,6 @@ def find_min(image):
 
 def find_max(image):
     max_val = 0
-    # Itera sobre os pixels da imagem
     for row in image:
         for pixel in row:
             # Acessa cada canal (B, G, R) do pixel
@@ -95,19 +93,17 @@ def sawtooth_transform(image, period):
             
             pixel = image[i][j]
             
-            # Separando os canais B, G e R
             B = int(pixel[0])
             G = int(pixel[1])
             R = int(pixel[2])
             
-            # Aplicando a transformação sawtooth para cada canal
+            # Aplicando a transformação dente de serra para cada canal
             B = int((B % period) * (255 / period))
             G = int((G % period) * (255 / period))
             R = int((R % period) * (255 / period))
             
             B,G,R = get_values_for_overflow(B,G,R)
             
-            # Atribuindo os valores transformados ao pixel na nova imagem
             result[i][j] = [B, G, R]
     
     return result

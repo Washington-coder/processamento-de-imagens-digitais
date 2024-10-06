@@ -12,6 +12,7 @@ def calcular_histograma_local(image_path, output_file, num_particoes=3):
     blocos = []
     bloco_altura = height // num_particoes
     
+    # Logica para obter as particoes da imagem
     for i in range(num_particoes):
         start_row = i * bloco_altura
         end_row = (i + 1) * bloco_altura if i != num_particoes - 1 else height
@@ -20,6 +21,7 @@ def calcular_histograma_local(image_path, output_file, num_particoes=3):
     
     histograma_concatenado = []
 
+    # Para cada bloco se faz um histograma local
     for bloco in blocos:
         hist_r = [0] * 256
         hist_g = [0] * 256
