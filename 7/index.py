@@ -86,7 +86,6 @@ def hysteresis_thresholding(image, low_threshold, high_threshold):
 
     return result
 
-# Função final para aplicar detecção de bordas com Canny implementado manualmente
 def canny_edge_detection(image, low_threshold=30, high_threshold=100):
     # Passo 1: Aplicar filtro Gaussiano
     blurred_image = apply_gaussian_blur(image)
@@ -104,7 +103,7 @@ def canny_edge_detection(image, low_threshold=30, high_threshold=100):
 
 # Função principal para detecção de bordas com quantização
 def edge_detection_with_quantization(image_path, num_colors=64, low_threshold=30, high_threshold=100):
-    # Carrega a imagem
+    
     image = cv2.imread(image_path)
     
     # Reduz a quantidade de cores via quantização
@@ -113,16 +112,14 @@ def edge_detection_with_quantization(image_path, num_colors=64, low_threshold=30
     # Converte para escala de cinza (necessário para o algoritmo de Canny)
     gray_image = cv2.cvtColor(quantized_image, cv2.COLOR_BGR2GRAY)
     
-    # Aplicar o algoritmo Canny implementado manualmente
+    # Aplicar o algoritmo Canny
     edges = canny_edge_detection(gray_image, low_threshold, high_threshold)
     
-    # Exibir os resultados
     cv2.imshow('Original Image', image)
     cv2.imshow('Quantized Image', quantized_image)
     cv2.imshow('Edges Detected', edges)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-# Exemplo de uso
 image_path = '../images/lena.png'
 edge_detection_with_quantization(image_path, num_colors=64, low_threshold=20, high_threshold=50)

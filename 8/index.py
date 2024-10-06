@@ -46,16 +46,13 @@ def calculate_histogram(image, mask, num_colors):
 
 # Função principal para extração de propriedades de cor usando BIC
 def extract_bic_properties(image_path, num_colors=64, low_threshold=30, high_threshold=100):
-    # Carrega a imagem
     image = cv2.imread(image_path)
 
     # Reduz a quantidade de cores via quantização
     quantized_image = quantize_image(image, num_colors)
 
-    # Detecta bordas usando o algoritmo Canny
     edges = detect_edges(quantized_image, low_threshold, high_threshold)
 
-    # Gera as imagens de borda e interior
     border_image, interior_image = generate_border_interior_images(quantized_image, edges)
 
     # Máscaras para borda e interior
@@ -82,6 +79,5 @@ def extract_bic_properties(image_path, num_colors=64, low_threshold=30, high_thr
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-# Exemplo de uso
 image_path = '../images/lena.png'
 extract_bic_properties(image_path, num_colors=64, low_threshold=30, high_threshold=100)
