@@ -16,31 +16,56 @@ def get_values_for_overflow(B, G, R):
 
 def find_min(image):
     min_val = 255
+    # Itera sobre os pixels da imagem
     for row in image:
         for pixel in row:
-            if pixel < min_val:
-                min_val = pixel
+            # Acessa cada canal (B, G, R) do pixel
+            for channel in pixel:
+                if channel < min_val:
+                    min_val = channel
     return min_val
 
 def find_max(image):
     max_val = 0
+    # Itera sobre os pixels da imagem
     for row in image:
         for pixel in row:
-            if pixel > max_val:
-                max_val = pixel
+            # Acessa cada canal (B, G, R) do pixel
+            for channel in pixel:
+                if channel > max_val:
+                    max_val = channel
     return max_val
 
+
 def expand_contrast(image, new_min, new_max):
-    old_min = int(find_min(image))
-    old_max = int(find_max(image))
+    altura, largura = image.shape[:2]
+    
+    # Encontrar o valor mínimo e máximo de todos os canais
+    old_min = find_min(image)
+    old_max = find_max(image)
+    
+    old_min = int(old_min)
+    old_max = int(old_max)
+    
     result = image.copy()
-    for i in range(len(image)):
-        for j in range(len(image[0])):
-            pixel = int(image[i][j])
-            new_pixel = int((pixel - old_min) * (new_max - new_min) / (old_max - old_min) + new_min)
-            if new_pixel >= 255:
-                new_pixel = 255
-            result[i][j] = new_pixel
+    
+    for i in range(altura):
+        for j in range(largura):
+            pixel = image[i][j]
+            
+            B = int(pixel[0])
+            G = int(pixel[1])
+            R = int(pixel[2])
+            
+            # Expande o contraste para cada canal
+            B = int((B - old_min) * (new_max - new_min) / (old_max - old_min) + new_min)
+            G = int((G - old_min) * (new_max - new_min) / (old_max - old_min) + new_min)
+            R = int((R - old_min) * (new_max - new_min) / (old_max - old_min) + new_min)
+            
+            B, G, R = get_values_for_overflow(B, G, R)
+            
+            result[i][j] = [B, G, R]
+    
     return result
 
 def compress_expand(image, factor):
@@ -89,10 +114,10 @@ if image is None:
     exit()
 
 compressed_image = compress_expand(image, 0.5)
-# contrasted_image = expand_contrast(compressed_image, 0, 255)
+contrasted_image = expand_contrast(compressed_image, 0, 255)
 # sawtooth_image = sawtooth_transform(image, 50)
 # log_image = log_transform(image)
 
-images = [compressed_image]
-titles = ['Compressão']
+images = [compressed_image, contrasted_image]
+titles = ['Compressão de contraste linear', 'Expansão de contraste linear']
 show_multiple_images(images, titles)

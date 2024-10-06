@@ -71,10 +71,10 @@ def extract_bic_properties(image_path, num_colors=64, low_threshold=30, high_thr
     cv2.imwrite("interior_image.jpg", interior_image)
 
     # Exibe as imagens geradas
-    cv2.imshow('Original Image', image)
-    cv2.imshow('Quantized Image', quantized_image.astype(np.uint8))  # Certifique-se de que a imagem quantizada seja uint8
-    cv2.imshow('Border Pixels Image', border_image)
-    cv2.imshow('Interior Pixels Image', interior_image)
+    cv2.imshow('Imagem original', image)
+    cv2.imshow('Imagem quantizada', quantized_image.astype(np.uint8))  # Certifique-se de que a imagem quantizada seja uint8
+    cv2.imshow('Imagem de pixels de borda', border_image)
+    cv2.imshow('Imagem de pixels internos', interior_image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

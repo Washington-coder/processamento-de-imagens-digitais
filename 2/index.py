@@ -27,7 +27,7 @@ def clarear_imagem(caminho_imagem):
             
 
     cv2.imshow('Imagem original', img_original)
-    cv2.imshow('Imagem Clareada', img)
+    cv2.imshow('Imagem negativa', img)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
