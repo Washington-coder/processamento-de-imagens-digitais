@@ -88,9 +88,28 @@ def compress_expand(image, factor):
 
 def sawtooth_transform(image, period):
     result = image.copy()
-    for i in range(len(image)):
-        for j in range(len(image[0])):
-            result[i][j] = int((image[i][j] % period) * (255 / period))
+    altura, largura = image.shape[:2]
+    
+    for i in range(altura):
+        for j in range(largura):
+            
+            pixel = image[i][j]
+            
+            # Separando os canais B, G e R
+            B = int(pixel[0])
+            G = int(pixel[1])
+            R = int(pixel[2])
+            
+            # Aplicando a transformação sawtooth para cada canal
+            B = int((B % period) * (255 / period))
+            G = int((G % period) * (255 / period))
+            R = int((R % period) * (255 / period))
+            
+            B,G,R = get_values_for_overflow(B,G,R)
+            
+            # Atribuindo os valores transformados ao pixel na nova imagem
+            result[i][j] = [B, G, R]
+    
     return result
 
 def log_transform(image):
@@ -115,9 +134,9 @@ if image is None:
 
 compressed_image = compress_expand(image, 0.5)
 contrasted_image = expand_contrast(compressed_image, 0, 255)
-# sawtooth_image = sawtooth_transform(image, 50)
+sawtooth_image = sawtooth_transform(image, 50)
 # log_image = log_transform(image)
 
-images = [compressed_image, contrasted_image]
-titles = ['Compressão de contraste linear', 'Expansão de contraste linear']
+images = [image, compressed_image, contrasted_image, sawtooth_image]
+titles = ['Imagem original', 'Compressão de contraste linear', 'Expansão de contraste linear', 'Dente de serra']
 show_multiple_images(images, titles)
