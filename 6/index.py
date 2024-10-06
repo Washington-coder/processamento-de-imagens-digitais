@@ -63,21 +63,38 @@ def mean_filter(image, kernel_size):
 
 def median_filter(image, kernel_size):
     pad = kernel_size // 2
-    height, width = image.shape
-    result = np.zeros((height, width), dtype=np.uint8)
+    height, width = len(image), len(image[0])
+    
+    # Inicializando a imagem de resultado com zeros
+    result = [[[0, 0, 0] for _ in range(width)] for _ in range(height)]
 
-    # Aplicar o filtro da mediana
+    # Aplicar o filtro da mediana para cada pixel
     for i in range(height):
         for j in range(width):
-            values = []
+            # Listas para armazenar os valores dos canais R, G, B
+            red_values = []
+            green_values = []
+            blue_values = []
+
             for m in range(-pad, pad + 1):
                 for n in range(-pad, pad + 1):
+                    # Coordenadas de vizinhança
                     x = min(max(i + m, 0), height - 1)
                     y = min(max(j + n, 0), width - 1)
-                    values.append(image[x, y])
-            result[i, j] = int(np.median(values))  # Mediana
+
+                    # Adiciona os valores dos canais
+                    pixel = image[x][y]
+                    blue_values.append(pixel[0])   # Canal B
+                    green_values.append(pixel[1])  # Canal G
+                    red_values.append(pixel[2])    # Canal R
+
+            # Calcula a mediana para cada canal
+            result[i][j][0] = sorted(blue_values)[len(blue_values) // 2]   # Canal B
+            result[i][j][1] = sorted(green_values)[len(green_values) // 2] # Canal G
+            result[i][j][2] = sorted(red_values)[len(red_values) // 2]     # Canal R
 
     return result
+
 
 def mode_filter(image, kernel_size):
     pad = kernel_size // 2
@@ -115,10 +132,10 @@ noisy_image = add_salt_and_pepper_noise(image, 0.1, 0.1)
 
 # Aplicar os filtros
 mean_filtered_image = mean_filter(noisy_image, 3)
-# median_filtered_image = median_filter(noisy_image, 3)
+median_filtered_image = median_filter(noisy_image, 3)
 # mode_filtered_image = mode_filter(noisy_image, 3)
 
 # Mostrar as imagens
-images = [noisy_image, mean_filtered_image]
-titles = ['Imagem original com uuído sal e pimenta', 'mean_filtered_image']
+images = [noisy_image, mean_filtered_image, median_filtered_image]
+titles = ['Imagem original com uuído sal e pimenta', 'mean_filtered_image', 'median_filtered_image']
 show_multiple_images(images, titles)
